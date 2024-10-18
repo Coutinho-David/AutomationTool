@@ -10,6 +10,19 @@ show_help() {
     exit 0
 }
 
+echo "
+________________________________________________________________________
+   ______ ____   __  ___
+  / ____// __ \ /  |/  /
+ / /    / / / // /|_/ /      Pentesting Automation Tool by (C)DM
+/ /___ / /_/ // /  / /  
+\____//_____//_/  /_/   
+
+________________________________________________________________________"
+                        
+                      
+sleep 2
+
 recon=false
 fuzz=false
 
@@ -102,24 +115,25 @@ if [ "$recon" = true ]; then
         405 : METHOD NOT ALLOWED 
 
         etc... visit https://en.wikipedia.org/wiki/List_of_HTTP_status_codes for more info"
-
-
-
-    read -p "Do you wish to delete previous scan files? [Except for final](Y/n): " choice
 fi
 
 
-if [ "$fuzz" = true ]; then 
+if [[ "$fuzz" = true ]]; then 
     echo "Running FFUF fuzzing on $domain..."
     sleep 1.5
+    read -p "Fuzzing for directories, subdomains, files or extensions? (dir/sub/fil/ext) " choice
+    if [[ "$choice" = "dir" ]]; then
+        ffuf -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt:FUZZ -u "https://$domain/FUZZ"
+    elif [[ "$choice" = "sub" ]]; then
+        ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt:FUZZ -u "https://FUZZ.$domain" -fc 404,403
+    elif [[ "$choice" = "fil" ]]; then
+        read -p "What are the file extensions eg: php, aspx, html, etc...? IF UNKNOWN RUN script with ext" ext
+        ffuf -w /usr/share/seclists/Discovery/DNS/namelist.txt:FUZZ -u "https://$domain/FUZZ.$ext"
+    elif [[ "$choice" = "ext" ]]; then
+        ffuf -w /usr/share/seclists/Discovery/Web-Content/web-extensions-big.txt:FUZZ -u "https://$domain/indexFUZZ"
+    else 
+        echo "No option selected"
+        ./automation.sh -h 
+        exit 1
+    fi
 fi
-
-
-
-
-
-
-
-
-
-
