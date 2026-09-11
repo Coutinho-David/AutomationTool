@@ -68,7 +68,7 @@ if [ "$recon" = true ]; then
     echo "----------------------------------------------------------------------"
     echo "SUBLISTER SCAN"
 
-    python3 -m sublist3r -d $domain -o "sublist3rScan.txt"
+    sublist3r -d $domain -o "sublist3rScan.txt"
 
     echo "----------------------------------------------------------------------"
     echo "ASSET FINDER SCAN"
